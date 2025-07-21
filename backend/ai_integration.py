@@ -1,25 +1,20 @@
-import os
-import openai
-from dotenv import load_dotenv
-
-load_dotenv()
-
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-if not openai.api_key:
-    raise ValueError("ERROR: OPENAI_API_KEY לא מוגדר בסביבת העבודה.")
-
 def analyze_text_with_ai(text):
-    try:
-        response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "אתה עוזר שמנתח מידע מטעה ברשתות חברתיות."},
-                {"role": "user", "content": f"האם יש בעיה בטקסט הבא: '{text}'?"}
-            ],
-            temperature=0.5,
-            max_tokens=500
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        return f"שגיאה בזמן ניתוח הטקסט: {str(e)}"
+    """
+    גרסת דמו של ניתוח טקסט — ללא שימוש ב־OpenAI.
+    מזהה טענות שקריות ידועות ומחזיר תגובה מותאמת.
+    אם לא זוהתה טענה מוכרת, מחזיר הודעה כללית.
+    """
+
+    known_false_claims = {
+        "החיסון גורם לאוטיזם": "⚠️ הטענה שמחסנים גורמים לאוטיזם הופרכה על ידי מחקרים רבים. מדובר בטענה מטעה.",
+        "העולם שטוח": "⚠️ מדובר בתיאוריית קונספירציה – הוכח מדעית שהעולם כדורי.",
+        "5G מפיץ קורונה": "⚠️ אין כל ראיה מדעית לקשר בין טכנולוגיית 5G להתפשטות וירוס הקורונה.",
+        "הנאצים הקימו את ויקיפדיה": "⚠️ מדובר בטענה מופרכת ושקרית – ויקיפדיה נוסדה ב־2001, עשרות שנים אחרי מלחמת העולם השנייה."
+    }
+
+    for claim, response in known_false_claims.items():
+        if claim in text:
+            return response
+
+    # ברירת מחדל אם לא נמצא טקסט מוכר
+    return "✅ לא זוהתה בעיה מובהקת בטקסט, אך תמיד מומלץ לבדוק מקורות אמינים."
