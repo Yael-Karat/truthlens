@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import AnalysisResult from './components/AnalysisResult'
+import './styles/index.css'
 
 export default function App() {
   const [text, setText] = useState('')
@@ -8,7 +9,6 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
 
-  // שמירת מצב כהה בלוקאל סטורג׳
   useEffect(() => {
     const savedMode = localStorage.getItem('darkMode') === 'true'
     setDarkMode(savedMode)
@@ -44,8 +44,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen px-4 py-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
+    <div className="min-h-screen px-4 py-8 bg-transparent transition-colors duration-300">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 backdrop-blur-md bg-opacity-90 dark:bg-opacity-90">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">
             🕵️ TruthLens
