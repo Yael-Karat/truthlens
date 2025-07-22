@@ -54,7 +54,7 @@ export default function App() {
             onClick={toggleTheme}
             className="bg-gray-200 dark:bg-gray-700 text-sm text-gray-800 dark:text-gray-200 px-3 py-1 rounded hover:scale-105 transition-transform"
           >
-            {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
+            {darkMode ? '🌞 מצב בהיר' : '🌙 מצב כהה'}
           </button>
         </div>
 
@@ -63,14 +63,14 @@ export default function App() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             className="p-4 border dark:border-gray-600 rounded-md h-40 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:text-white"
-            placeholder="Enter a statement to analyze..."
+            placeholder="הדבק כאן פוסט או טענה לניתוח..."
             required
           />
           <button
             type="submit"
             className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded transition"
           >
-            🚀 Analyze Statement
+            🚀 נתח טענה
           </button>
         </form>
 
@@ -80,7 +80,7 @@ export default function App() {
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
           >
-            🔄 Analyzing...
+            🔄 מנתח טקסט...
           </motion.div>
         )}
 
