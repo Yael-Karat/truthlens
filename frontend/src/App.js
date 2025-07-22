@@ -37,27 +37,35 @@ export default function App() {
       const data = await res.json()
       setAnalysis(data.analysis)
     } catch (err) {
-      setAnalysis('❌ Failed to analyze text.')
+      setAnalysis('❌ לא הצלחנו לנתח את הטקסט.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen px-4 py-8 bg-transparent transition-colors duration-300">
-      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 backdrop-blur-md bg-opacity-90 dark:bg-opacity-90">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">
+    <div className="min-h-screen px-4 py-8 bg-transparent transition-colors duration-300" dir="rtl">
+      <div className="max-w-2xl mx-auto bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl shadow-xl rounded-xl p-6">
+        
+        {/* כותרת עליונה */}
+        <header className="flex justify-between items-center mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
             🕵️ TruthLens
           </h1>
           <button
             onClick={toggleTheme}
-            className="bg-gray-200 dark:bg-gray-700 text-sm text-gray-800 dark:text-gray-200 px-3 py-1 rounded hover:scale-105 transition-transform"
+            className="flex items-center gap-2 bg-gray-200 dark:bg-gray-700 text-sm text-gray-800 dark:text-gray-200 px-3 py-1 rounded hover:scale-105 hover:bg-gray-300 dark:hover:bg-gray-600 transition-transform"
           >
-            {darkMode ? '🌞 מצב בהיר' : '🌙 מצב כהה'}
+            {darkMode ? '☀️ מצב בהיר' : '🌙 מצב כהה'}
           </button>
-        </div>
+        </header>
 
+        {/* תיאור קצר */}
+        <p className="text-gray-700 dark:text-gray-300 mb-4 text-lg font-medium leading-relaxed">
+          מערכת לזיהוי טענות שקריות או פייק ניוז בעזרת ניתוח בינה מלאכותית.
+        </p>
+
+        {/* טופס ניתוח טענה */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <textarea
             value={text}
@@ -66,25 +74,59 @@ export default function App() {
             placeholder="הדבק כאן פוסט או טענה לניתוח..."
             required
           />
-          <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded transition"
-          >
-            🚀 נתח טענה
-          </button>
+
+          <div className="flex justify-between items-center flex-wrap gap-2">
+            {/* ימין: כפתור נתח טענה */}
+            <div>
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:scale-105 transition-transform duration-200"
+              >
+                🚀 נתח טענה
+              </button>
+            </div>
+
+            {/* שמאל: אפס הכל ואז טען טקסט לדוגמה */}
+            <div className="flex flex-row-reverse gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={() => {
+                  setText('')
+                  setAnalysis(null)
+                }}
+                className="bg-red-100 dark:bg-red-800 border border-red-300 dark:border-red-600 text-red-700 dark:text-red-100 px-3 py-1 rounded-md shadow-sm hover:bg-red-200 dark:hover:bg-red-700 transition"
+              >
+                🔄 אפס הכל
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setText('ממשלת ישראל הודיעה על תוכנית חדשה שתתחיל מחר...')
+                }
+                className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-md shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+              >
+                טען טקסט לדוגמה
+              </button>
+            </div>
+          </div>
         </form>
 
+        {/* טעינה */}
         {loading && (
           <motion.div
-            className="text-center text-xl mt-6 text-blue-500 dark:text-blue-300"
+            className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mt-6"
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-          >
-            🔄 מנתח טקסט...
-          </motion.div>
+          />
         )}
 
-        {analysis && <AnalysisResult text={analysis} />}
+        {/* תוצאה */}
+        {analysis && (
+          <div className="mt-6 p-4 bg-green-50 dark:bg-green-800/30 border border-green-300 dark:border-green-500 text-green-800 dark:text-green-200 rounded-lg shadow-sm whitespace-pre-wrap leading-relaxed">
+            {analysis}
+          </div>
+        )}
       </div>
     </div>
   )
