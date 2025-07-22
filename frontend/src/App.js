@@ -101,9 +101,10 @@ export default function App() {
 
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
                   setText('ממשלת ישראל הודיעה על תוכנית חדשה שתתחיל מחר...')
-                }
+                  setAnalysis(null)
+                }}
                 className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-md shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition"
               >
                 טען טקסט לדוגמה
