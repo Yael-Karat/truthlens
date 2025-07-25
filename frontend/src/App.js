@@ -28,6 +28,7 @@ export default function App() {
     e.preventDefault()
     setLoading(true)
     setAnalysis(null)
+
     try {
       const res = await fetch('http://127.0.0.1:5000/analyze', {
         method: 'POST',
@@ -38,18 +39,31 @@ export default function App() {
       console.log('🔥 תגובה מהשרת:', data)
 
       if (data.status === 'not_found') {
-        // הודעה נייטרלית במקרה שלא נמצא מידע על הטענה
-        setAnalysis('⚠️ לא נמצאה טענה דומה במסד הנתונים.')
-      } else if (data.status === 'success' && data.summary) {
-        // מציג את סיכום התוצאה מהשרת
-        setAnalysis(`✅ ${data.summary}`)
+        setAnalysis({
+          verdict: 'unknown',
+          summary: 'לא נמצאה טענה דומה במסד הנתונים.',
+          sources: []
+        })
+      } else if (data.status === 'success') {
+        setAnalysis({
+          verdict: data.verdict || 'unknown',
+          summary: data.summary || 'אין סיכום זמין.',
+          sources: data.sources || []
+        })
       } else {
-        // במקרה של שגיאה או תגובה לא צפויה
-        setAnalysis('❌ לא התקבל ניתוח תקין מהשרת.')
+        setAnalysis({
+          verdict: 'error',
+          summary: 'שגיאה: לא התקבל ניתוח תקין מהשרת.',
+          sources: []
+        })
       }
     } catch (err) {
       console.error('⚠️ שגיאה:', err)
-      setAnalysis('❌ לא הצלחנו לנתח את הטקסט.')
+      setAnalysis({
+        verdict: 'error',
+        summary: 'שגיאה: לא הצלחנו לנתח את הטקסט.',
+        sources: []
+      })
     } finally {
       setLoading(false)
     }
@@ -58,7 +72,6 @@ export default function App() {
   return (
     <div className="min-h-screen px-4 py-8 bg-transparent transition-colors duration-300" dir="rtl">
       <div className="max-w-2xl mx-auto bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl shadow-xl rounded-xl p-6">
-
         <header className="flex justify-between items-center mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
             🕵️ TruthLens
@@ -109,7 +122,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => {
-                  setText('ממשלת ישראל הודיעה על תוכנית חדשה שתתחיל מחר...')
+                  setText('החיסונים גורמים לאוטיזם')
                   setAnalysis(null)
                 }}
                 className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-md shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 transition"
@@ -128,7 +141,7 @@ export default function App() {
           />
         )}
 
-        {analysis && <AnalysisResult text={analysis} />}
+        {analysis && <AnalysisResult verdict={analysis.verdict} text={analysis.summary} sources={analysis.sources} />}
       </div>
     </div>
   )

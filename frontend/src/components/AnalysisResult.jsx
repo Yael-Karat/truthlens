@@ -1,35 +1,25 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-export default function AnalysisResult({ text }) {
+export default function AnalysisResult({ verdict, text, sources = [] }) {
   const getStyle = () => {
-    const lowerText = text.toLowerCase()
-
-    if (text.includes('❌') || lowerText.includes('שקר') || lowerText.includes('לא נכון')) {
-      return {
-        icon: '❌',
-        classes: 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-200 dark:border-red-600',
-      }
-    }
-
-    if (text.includes('⚠️') || lowerText.includes('לא נמצאה') || lowerText.includes('אזהרה')) {
-      return {
-        icon: '⚠️',
-        classes: 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-200 dark:border-yellow-600',
-      }
-    }
-
-    if (text.includes('✅')) {
-      return {
-        icon: '✅',
-        classes: 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-200 dark:border-green-600',
-      }
-    }
-
-    // ברירת מחדל - נייטרלי (למשל אם לא מזהה אייקון)
-    return {
-      icon: 'ℹ️',
-      classes: 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-900/30 dark:text-gray-200 dark:border-gray-600',
+    switch (verdict) {
+      case 'true':
+        return {
+          icon: '✅',
+          classes: 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-200 dark:border-green-600'
+        }
+      case 'false':
+        return {
+          icon: '❌',
+          classes: 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-200 dark:border-red-600'
+        }
+      case 'unknown':
+      default:
+        return {
+          icon: '⚠️',
+          classes: 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-200 dark:border-yellow-600'
+        }
     }
   }
 
@@ -37,13 +27,27 @@ export default function AnalysisResult({ text }) {
 
   return (
     <motion.div
-      className={`border p-4 mt-6 rounded-lg shadow flex items-start gap-3 ${classes}`}
+      className={`border p-4 mt-6 rounded-lg shadow flex flex-col gap-3 ${classes}`}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <span className="text-2xl mt-1">{icon}</span>
-      <div className="whitespace-pre-wrap leading-relaxed text-base font-medium">{text}</div>
+      <div className="flex items-start gap-2">
+        <span className="text-2xl mt-1">{icon}</span>
+        <div className="whitespace-pre-wrap leading-relaxed text-base font-medium">{text}</div>
+      </div>
+
+      {sources.length > 0 && (
+        <div className="pl-9 text-sm text-blue-800 underline space-y-1">
+          {sources.map((src, idx) => (
+            <div key={idx}>
+              <a href={src} target="_blank" rel="noopener noreferrer">
+                מקור {idx + 1}
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
     </motion.div>
   )
 }
