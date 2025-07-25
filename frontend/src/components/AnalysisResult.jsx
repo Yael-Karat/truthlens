@@ -1,7 +1,18 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-export default function AnalysisResult({ verdict, text, sources = [] }) {
+const TrustStars = ({ score }) => {
+  const fullStars = Math.round((score || 0) / 20) // ממיר 0-100 ל-0-5 כוכבים
+  return (
+    <div className="text-yellow-500 text-xl flex gap-1 min-w-[100px]">
+      {[...Array(5)].map((_, i) => (
+        <span key={i}>{i < fullStars ? '⭐' : '☆'}</span>
+      ))}
+    </div>
+  )
+}
+
+export default function AnalysisResult({ verdict, text, sources = [], trust = null }) {
   const getStyle = () => {
     switch (verdict) {
       case 'true':
@@ -32,9 +43,10 @@ export default function AnalysisResult({ verdict, text, sources = [] }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-3">
         <span className="text-2xl mt-1">{icon}</span>
-        <div className="whitespace-pre-wrap leading-relaxed text-base font-medium">{text}</div>
+        <div className="flex-1 whitespace-pre-wrap leading-relaxed text-base font-medium">{text}</div>
+        {trust !== null && <TrustStars score={trust} />}
       </div>
 
       {sources.length > 0 && (

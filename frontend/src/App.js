@@ -42,19 +42,22 @@ export default function App() {
         setAnalysis({
           verdict: 'unknown',
           summary: 'לא נמצאה טענה דומה במסד הנתונים.',
-          sources: []
+          sources: [],
+          trust: null
         })
       } else if (data.status === 'success') {
         setAnalysis({
           verdict: data.verdict || 'unknown',
           summary: data.summary || 'אין סיכום זמין.',
-          sources: data.sources || []
+          sources: data.sources || [],
+          trust: data.trust ?? null
         })
       } else {
         setAnalysis({
           verdict: 'error',
           summary: 'שגיאה: לא התקבל ניתוח תקין מהשרת.',
-          sources: []
+          sources: [],
+          trust: null
         })
       }
     } catch (err) {
@@ -62,7 +65,8 @@ export default function App() {
       setAnalysis({
         verdict: 'error',
         summary: 'שגיאה: לא הצלחנו לנתח את הטקסט.',
-        sources: []
+        sources: [],
+        trust: null
       })
     } finally {
       setLoading(false)
@@ -141,7 +145,14 @@ export default function App() {
           />
         )}
 
-        {analysis && <AnalysisResult verdict={analysis.verdict} text={analysis.summary} sources={analysis.sources} />}
+        {analysis && (
+          <AnalysisResult
+            verdict={analysis.verdict}
+            text={analysis.summary}
+            sources={analysis.sources}
+            trust={analysis.trust}
+          />
+        )}
       </div>
     </div>
   )

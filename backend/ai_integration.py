@@ -16,7 +16,7 @@ def analyze_claim_with_google_fact_check(text):
     url = "https://factchecktools.googleapis.com/v1alpha1/claims:search"
     params = {
         "query": text,
-        "languageCode": "en",  # שינינו מ-he ל-en כדי להרחיב את התוצאות
+        "languageCode": "en",
         "key": GOOGLE_FACT_CHECK_API_KEY
     }
 
@@ -42,12 +42,21 @@ def analyze_claim_with_google_fact_check(text):
         claim_url = claim_review.get("url", "")
         publisher = claim_review.get("publisher", {}).get("name", "מקור לא ידוע")
 
+        # דירוג אמינות כמשקל מספרי (0-100) לדוגמה
+        rating_lower = claim_rating.lower()
+        if "false" in rating_lower:
+            trust_score = 20
+        elif "true" in rating_lower or "correct" in rating_lower:
+            trust_score = 80
+        else:
+            trust_score = 50
+
         return {
-            "status": "found",
-            "claim": claim_text,
-            "rating": claim_rating,
-            "source_url": claim_url,
-            "publisher": publisher
+            "status": "success",
+            "verdict": "false" if "false" in rating_lower else "true",
+            "summary": f'הטענה דורגה כ: {claim_rating} על ידי {publisher}.',
+            "sources": [claim_url],
+            "trust": trust_score
         }
 
     except requests.exceptions.RequestException as e:
@@ -60,27 +69,21 @@ def analyze_text_with_ai(text):
     print(f"📩 טקסט שהתקבל לניתוח: \"{text}\"")
     result = analyze_claim_with_google_fact_check(text)
 
-    if result["status"] == "found":
-        verdict = "false" if "false" in result["rating"].lower() else "true"
-        summary = f'הטענה דורגה כ: {result["rating"]} על ידי {result["publisher"]}.'
-
-        return {
-            "status": "success",
-            "verdict": verdict,
-            "summary": summary,
-            "sources": [result["source_url"]]
-        }
+    if result["status"] == "success":
+        return result
 
     elif result["status"] == "not_found":
         return {
             "status": "not_found",
             "verdict": "unknown",
             "summary": "לא נמצאה טענה דומה במסד הנתונים.",
-            "sources": []
+            "sources": [],
+            "trust": None
         }
 
-    else:  # שגיאה או חסר API Key
+    else:
         return {
             "status": "error",
-            "message": result.get("message", "שגיאה לא ידועה.")
+            "message": result.get("message", "שגיאה לא ידועה."),
+            "trust": None
         }
