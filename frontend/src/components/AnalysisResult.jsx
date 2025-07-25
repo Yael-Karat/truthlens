@@ -12,16 +12,24 @@ export default function AnalysisResult({ text }) {
       }
     }
 
-    if (text.includes('⚠️') || lowerText.includes('לא מאומת') || lowerText.includes('אזהרה')) {
+    if (text.includes('⚠️') || lowerText.includes('לא נמצאה') || lowerText.includes('אזהרה')) {
       return {
         icon: '⚠️',
         classes: 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-200 dark:border-yellow-600',
       }
     }
 
+    if (text.includes('✅')) {
+      return {
+        icon: '✅',
+        classes: 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-200 dark:border-green-600',
+      }
+    }
+
+    // ברירת מחדל - נייטרלי (למשל אם לא מזהה אייקון)
     return {
-      icon: '✅',
-      classes: 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-200 dark:border-green-600',
+      icon: 'ℹ️',
+      classes: 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-900/30 dark:text-gray-200 dark:border-gray-600',
     }
   }
 
