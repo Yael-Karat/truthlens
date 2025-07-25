@@ -35,8 +35,15 @@ export default function App() {
         body: JSON.stringify({ text })
       })
       const data = await res.json()
-      setAnalysis(data.analysis)
+      console.log('🔥 תגובה מהשרת:', data)
+
+      if (data.summary) {
+        setAnalysis(data.summary)
+      } else {
+        setAnalysis('❌ לא התקבל ניתוח מהשרת.')
+      }
     } catch (err) {
+      console.error('⚠️ שגיאה:', err)
       setAnalysis('❌ לא הצלחנו לנתח את הטקסט.')
     } finally {
       setLoading(false)
@@ -46,8 +53,7 @@ export default function App() {
   return (
     <div className="min-h-screen px-4 py-8 bg-transparent transition-colors duration-300" dir="rtl">
       <div className="max-w-2xl mx-auto bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl shadow-xl rounded-xl p-6">
-        
-        {/* כותרת עליונה */}
+
         <header className="flex justify-between items-center mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
             🕵️ TruthLens
@@ -60,12 +66,10 @@ export default function App() {
           </button>
         </header>
 
-        {/* תיאור קצר */}
         <p className="text-gray-700 dark:text-gray-300 mb-4 text-lg font-medium leading-relaxed">
           מערכת לזיהוי טענות שקריות או פייק ניוז בעזרת ניתוח בינה מלאכותית.
         </p>
 
-        {/* טופס ניתוח טענה */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <textarea
             value={text}
@@ -76,7 +80,6 @@ export default function App() {
           />
 
           <div className="flex justify-between items-center flex-wrap gap-2">
-            {/* ימין: כפתור נתח טענה */}
             <div>
               <button
                 type="submit"
@@ -86,7 +89,6 @@ export default function App() {
               </button>
             </div>
 
-            {/* שמאל: אפס הכל ואז טען טקסט לדוגמה */}
             <div className="flex flex-row-reverse gap-2 flex-wrap">
               <button
                 type="button"
@@ -113,7 +115,6 @@ export default function App() {
           </div>
         </form>
 
-        {/* טעינה */}
         {loading && (
           <motion.div
             className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mt-6"
@@ -122,12 +123,7 @@ export default function App() {
           />
         )}
 
-        {/* תוצאה */}
-        {analysis && (
-          <div className="mt-6 p-4 bg-green-50 dark:bg-green-800/30 border border-green-300 dark:border-green-500 text-green-800 dark:text-green-200 rounded-lg shadow-sm whitespace-pre-wrap leading-relaxed">
-            {analysis}
-          </div>
-        )}
+        {analysis && <AnalysisResult text={analysis} />}
       </div>
     </div>
   )
