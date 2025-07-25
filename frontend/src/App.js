@@ -37,10 +37,15 @@ export default function App() {
       const data = await res.json()
       console.log('🔥 תגובה מהשרת:', data)
 
-      if (data.summary) {
-        setAnalysis(data.summary)
+      if (data.status === 'not_found') {
+        // הודעה נייטרלית במקרה שלא נמצא מידע על הטענה
+        setAnalysis('⚠️ לא נמצאה טענה דומה במסד הנתונים.')
+      } else if (data.status === 'success' && data.summary) {
+        // מציג את סיכום התוצאה מהשרת
+        setAnalysis(`✅ ${data.summary}`)
       } else {
-        setAnalysis('❌ לא התקבל ניתוח מהשרת.')
+        // במקרה של שגיאה או תגובה לא צפויה
+        setAnalysis('❌ לא התקבל ניתוח תקין מהשרת.')
       }
     } catch (err) {
       console.error('⚠️ שגיאה:', err)
