@@ -167,6 +167,7 @@ def search_wikipedia_summary(query):
         return None
 
 def analyze_text_with_ai(text):
+    text = (text or "").strip()
     print(f"📩 טקסט שהתקבל לניתוח: \"{text}\"")
 
     result = analyze_claim_with_google_fact_check(text)

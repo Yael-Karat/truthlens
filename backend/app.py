@@ -8,13 +8,14 @@ CORS(app)
 @app.route("/analyze", methods=["POST"])
 def analyze():
     data = request.get_json()
-    text = data.get("text", "")
-    print("טקסט שהתקבל לניתוח:", text)
+    text = (data.get("text") or "").strip()  # ✅ מנקה רווחים ושורות חדשות
+
+    print(f"טקסט שהתקבל לניתוח (אחרי strip): '{text}'")
 
     if not text:
         return jsonify({
             "status": "error",
-            "message": "לא התקבל טקסט לניתוח.",
+            "message": "לא התקבל טקסט תקין לניתוח.",
             "verdict": "unknown",
             "summary": "",
             "sources": [],
@@ -25,7 +26,6 @@ def analyze():
     result = analyze_text_with_ai(text)
     print("תוצאה מה-AI:", result)
 
-    # נוודא שכל השדות קיימים בתשובה
     response = {
         "status": result.get("status", "error"),
         "verdict": result.get("verdict", "unknown"),
