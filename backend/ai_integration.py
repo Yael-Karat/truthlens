@@ -7,7 +7,7 @@ load_dotenv()
 
 GOOGLE_FACT_CHECK_API_KEY = os.getenv("GOOGLE_FACT_CHECK_API_KEY")
 
-def find_best_claim(text, claims, threshold=0.7):
+def find_best_claim(text, claims, similarity_threshold=0.7):
     best_claim = None
     highest_score = 0
     for claim in claims:
@@ -16,10 +16,9 @@ def find_best_claim(text, claims, threshold=0.7):
         if score > highest_score:
             highest_score = score
             best_claim = claim
-    if highest_score >= threshold:
-        return best_claim, highest_score
-    else:
-        return None, highest_score
+    if highest_score < similarity_threshold:
+        return None
+    return best_claim
 
 def analyze_claim_with_google_fact_check(text):
     if not GOOGLE_FACT_CHECK_API_KEY:
@@ -44,18 +43,16 @@ def analyze_claim_with_google_fact_check(text):
         print("🔍 Google API raw response:")
         print(data)
 
-        if "claims" not in data or not data["claims"]:
+        # טיפול במקרה שהתגובה ריקה או לא מכילה claims
+        if not data or "claims" not in data or not data["claims"]:
             return {
                 "status": "not_found"
             }
 
-        top_claim, similarity_score = find_best_claim(text, data["claims"])
-
+        top_claim = find_best_claim(text, data["claims"], similarity_threshold=0.7)
         if not top_claim:
-            # לא נמצאה טענה עם דמיון מספק
             return {
-                "status": "not_found",
-                "similarity_score": similarity_score
+                "status": "not_found"
             }
 
         claim_text = top_claim.get("text", "אין תיאור טענה")
@@ -99,7 +96,8 @@ def analyze_claim_with_google_fact_check(text):
 
         verdict = "unknown"
 
-        # בדיקה אם הטענה שהוזנה תואמת את הטענה ב-claim_text לפי דמיון ומילות דירוג
+        similarity_score = difflib.SequenceMatcher(None, input_lower, claim_text_lower).ratio()
+
         if similarity_score > 0.8:
             if any(neg in rating_lower for neg in negative_indicators):
                 verdict = "false"
@@ -108,8 +106,12 @@ def analyze_claim_with_google_fact_check(text):
             else:
                 verdict = "unknown"
         else:
-            # אם דמיון נמוך יחסית, לא מחליטים ודאי
-            verdict = "unknown"
+            if any(neg in rating_lower for neg in negative_indicators):
+                verdict = "false"
+            elif any(pos in rating_lower for pos in positive_indicators):
+                verdict = "true"
+            else:
+                verdict = "unknown"
 
         return {
             "status": "success",
@@ -174,11 +176,16 @@ def analyze_text_with_ai(text):
     if result["status"] == "not_found":
         wiki_data = search_wikipedia_summary(text)
         if wiki_data:
+            # הסרת כתובת ויקיפדיה מ-sources כדי למנוע כפילות
+            sources = []
+            if "sources" in result:
+                sources = [src for src in result.get("sources", []) if src != wiki_data["url"]]
+
             return {
                 "status": "partial_success",
                 "verdict": "unknown",
                 "summary": f'נמצאה התייחסות בויקיפדיה: {wiki_data["snippet"]}',
-                "sources": [wiki_data["url"]],
+                "sources": sources,
                 "trust": 60,
                 "wikipedia": wiki_data
             }
