@@ -38,26 +38,38 @@ export default function App() {
       const data = await res.json()
       console.log('🔥 תגובה מהשרת:', data)
 
-      if (data.status === 'not_found') {
-        setAnalysis({
-          verdict: 'unknown',
-          summary: 'לא נמצאה טענה דומה במסד הנתונים.',
-          sources: [],
-          trust: null
-        })
-      } else if (data.status === 'success') {
+      if (data.status === 'success') {
         setAnalysis({
           verdict: data.verdict || 'unknown',
           summary: data.summary || 'אין סיכום זמין.',
           sources: data.sources || [],
-          trust: data.trust ?? null
+          trust: data.trust ?? null,
+          wikipedia: null
+        })
+      } else if (data.status === 'partial_success') {
+        // ✅ תמיכה מלאה במקרה של ויקיפדיה
+        setAnalysis({
+          verdict: data.verdict || 'unknown',
+          summary: data.summary || 'נמצאה התייחסות מוויקיפדיה.',
+          sources: data.sources || [],
+          trust: data.trust ?? 60,
+          wikipedia: data.wikipedia || null
+        })
+      } else if (data.status === 'not_found') {
+        setAnalysis({
+          verdict: 'unknown',
+          summary: 'לא נמצאה טענה דומה במסד הנתונים.',
+          sources: [],
+          trust: null,
+          wikipedia: null
         })
       } else {
         setAnalysis({
           verdict: 'error',
           summary: 'שגיאה: לא התקבל ניתוח תקין מהשרת.',
           sources: [],
-          trust: null
+          trust: null,
+          wikipedia: null
         })
       }
     } catch (err) {
@@ -66,7 +78,8 @@ export default function App() {
         verdict: 'error',
         summary: 'שגיאה: לא הצלחנו לנתח את הטקסט.',
         sources: [],
-        trust: null
+        trust: null,
+        wikipedia: null
       })
     } finally {
       setLoading(false)
@@ -151,6 +164,7 @@ export default function App() {
             text={analysis.summary}
             sources={analysis.sources}
             trust={analysis.trust}
+            wikipedia={analysis.wikipedia} // ✅ כאן נוסף החיבור לוויקיפדיה
           />
         )}
       </div>
