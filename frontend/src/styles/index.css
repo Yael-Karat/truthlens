@@ -5,3 +5,7 @@
 body {
   @apply transition-colors duration-300 text-gray-800 dark:text-gray-100;
 }
+
+.app-footer {
+  @apply text-center py-1 text-xs text-gray-500 bg-white/30 border-t border-gray-200 backdrop-blur-sm fixed bottom-0 w-full z-50;
+}

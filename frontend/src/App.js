@@ -22,7 +22,7 @@ function HomePage({
 }) {
   return (
     <div
-      className="min-h-screen px-4 py-8 bg-transparent transition-colors duration-300"
+      className="min-h-screen px-4 py-8 pb-20 bg-transparent transition-colors duration-300"
       dir="rtl"
     >
       <div className="max-w-2xl mx-auto bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl shadow-xl rounded-xl p-6">
