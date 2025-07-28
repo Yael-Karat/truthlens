@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from ai_integration import analyze_text_with_ai
+from ai_integration import analyze_text_with_ai  # הקובץ המשופר
 import os
 import json
 import uuid
@@ -72,15 +72,17 @@ def analyze():
             "summary": "",
             "sources": [],
             "trust": None,
-            "wikipedia": None
+            "wikipedia": None,
+            "chatgpt_analysis": None
         }), 400
 
     result = analyze_text_with_ai(text)
-    print("תוצאה מה-AI:", result)
+    print("תוצאה מה-AI המשופר:", result)
 
     # שמירה בהיסטוריה
     saved_entry = add_to_history(text, result)
 
+    # הכנת תגובה משופרת
     response = {
         "status": result.get("status", "error"),
         "verdict": result.get("verdict", "unknown"),
@@ -89,7 +91,10 @@ def analyze():
         "trust": result.get("trust", None),
         "wikipedia": result.get("wikipedia", None),
         "message": result.get("message", ""),
-        "history_id": saved_entry["id"]  # מחזיר גם את ה-ID
+        "history_id": saved_entry["id"],
+        # מידע נוסף מ-ChatGPT
+        "chatgpt_analysis": result.get("chatgpt_analysis", None),
+        "similarity": result.get("similarity", None)
     }
 
     return jsonify(response)
@@ -110,6 +115,15 @@ def delete_item(item_id):
 def clear_all_history():
     clear_history()
     return jsonify({"status": "success", "message": "ההיסטוריה נמחקה כולה."})
+
+@app.route("/health", methods=["GET"])
+def health_check():
+    """בדיקת תקינות המערכת"""
+    return jsonify({
+        "status": "healthy",
+        "message": "TruthLens API is running",
+        "features": ["Google Fact Check", "ChatGPT Analysis", "Wikipedia Search"]
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
