@@ -14,7 +14,7 @@ HISTORY_FILE = "history.json"
 # -------- פונקציות עזר להיסטוריה --------
 
 def load_history():
-    """טוען היסטוריה מהקובץ (אם קיים), אחרת מחזיר רשימה ריקה."""
+    """טוען היסטוריה מהקובץ (אם קיים), אחרת מחזיר רשימה ריקה"""
     if not os.path.exists(HISTORY_FILE):
         return []
     try:
@@ -24,12 +24,12 @@ def load_history():
         return []
 
 def save_history(history_list):
-    """שומר רשימת היסטוריה לקובץ."""
+    """שומר רשימת היסטוריה לקובץ"""
     with open(HISTORY_FILE, "w", encoding="utf-8") as f:
         json.dump(history_list, f, ensure_ascii=False, indent=2)
 
 def add_to_history(input_text, result):
-    """יוצר רשומה ושומר אותה להיסטוריה."""
+    """יוצר רשומה ושומר אותה להיסטוריה"""
     history = load_history()
     new_entry = {
         "id": str(uuid.uuid4()),
@@ -42,7 +42,7 @@ def add_to_history(input_text, result):
     return new_entry
 
 def delete_history_item(item_id):
-    """מוחק פריט לפי ID."""
+    """מוחק פריט לפי ID"""
     history = load_history()
     new_history = [h for h in history if h["id"] != item_id]
     if len(new_history) != len(history):
@@ -51,7 +51,7 @@ def delete_history_item(item_id):
     return False
 
 def clear_history():
-    """מנקה את כל ההיסטוריה."""
+    """מנקה את כל ההיסטוריה"""
     save_history([])
     return True
 
