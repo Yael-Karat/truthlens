@@ -72,7 +72,6 @@ def analyze():
             "summary": "",
             "sources": [],
             "trust": None,
-            "wikipedia": None,
             "chatgpt_analysis": None
         }), 400
 
@@ -119,7 +118,7 @@ def health_check():
     return jsonify({
         "status": "healthy",
         "message": "TruthLens API is running",
-        "features": ["Google Fact Check", "ChatGPT Analysis", "Wikipedia Search"]
+        "features": ["ChatGPT Analysis"]
     })
 
 if __name__ == "__main__":
