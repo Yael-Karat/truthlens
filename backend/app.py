@@ -119,7 +119,7 @@ def health_check():
     return jsonify({
         "status": "healthy",
         "message": "TruthLens API is running",
-        "features": ["Google Fact Check", "ChatGPT Analysis", "Wikipedia Search"]
+        "features": ["ChatGPT Analysis"]
     })
 
 if __name__ == "__main__":
