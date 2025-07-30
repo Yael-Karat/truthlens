@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from ai_integration import analyze_text_with_ai  # הקובץ המשופר
+from ai_integration import analyze_text_with_ai
 import os
 import json
 import uuid
@@ -76,25 +76,22 @@ def analyze():
             "chatgpt_analysis": None
         }), 400
 
+   # Inside def analyze():
     result = analyze_text_with_ai(text)
-    print("תוצאה מה-AI המשופר:", result)
+    print("תוצאה מה-AI:", result)
 
-    # שמירה בהיסטוריה
     saved_entry = add_to_history(text, result)
 
-    # הכנת תגובה משופרת
     response = {
         "status": result.get("status", "error"),
         "verdict": result.get("verdict", "unknown"),
         "summary": result.get("summary", ""),
-        "sources": result.get("sources", []),
-        "trust": result.get("trust", None),
-        "wikipedia": result.get("wikipedia", None),
-        "message": result.get("message", ""),
-        "history_id": saved_entry["id"],
-        # מידע נוסף מ-ChatGPT
-        "chatgpt_analysis": result.get("chatgpt_analysis", None),
-        "similarity": result.get("similarity", None)
+        "certainty": result.get("certainty", None),
+        "bias_flags": result.get("bias_flags", []),
+        "misinformation_patterns": result.get("misinformation_patterns", []),
+        "claim_type": result.get("claim_type", "unknown"),
+        "evidence": result.get("evidence", []),
+        "history_id": saved_entry["id"]
     }
 
     return jsonify(response)
