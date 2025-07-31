@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -133,6 +132,7 @@ function HomePage({
             text={analysis.summary}
             sources={analysis.sources}
             trust={analysis.trust}
+            wikipedia={analysis.wikipedia}
             lang={language}
           />
         )}
@@ -210,6 +210,7 @@ export default function App() {
           summary: data.summary || "",
           sources: data.sources || [],
           trust: data.trust ?? null,
+          wikipedia: null,
         };
       } else if (data.status === "partial_success") {
         result = {
@@ -217,6 +218,7 @@ export default function App() {
           summary: data.summary || "",
           sources: data.sources || [],
           trust: data.trust ?? 60,
+          wikipedia: data.wikipedia || null,
         };
       } else if (data.status === "not_found") {
         result = {
@@ -227,6 +229,7 @@ export default function App() {
               : "No similar claim found in the database.",
           sources: [],
           trust: null,
+          wikipedia: null,
         };
       } else {
         result = {
@@ -237,6 +240,7 @@ export default function App() {
               : "Error: No valid analysis received from the server.",
           sources: [],
           trust: null,
+          wikipedia: null,
         };
       }
 
@@ -252,7 +256,7 @@ export default function App() {
         verdict: "error",
         summary:
           language === "he"
-            ? "שגיאה: לא הצליח לנתח את הטקסט."
+            ? "שגיאה: לא הצלי7 לנתח את הטקסט."
             : "Error: Unable to analyze the text.",
         sources: [],
         trust: null,
