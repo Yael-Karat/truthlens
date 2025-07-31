@@ -23,6 +23,7 @@ function HomePage({
   toggleLanguage,
 }) {
   const isHebrew = language === "he";
+  const trimmedText = text.trim();
 
   return (
     <div
@@ -79,7 +80,12 @@ function HomePage({
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:scale-105 transition-transform duration-200"
+                disabled={!trimmedText}
+                className={`bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform duration-200 ${
+                  !trimmedText
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:scale-105"
+                }`}
               >
                 🚀 {isHebrew ? "נתח טענה" : "Analyze Claim"}
               </button>
@@ -126,15 +132,9 @@ function HomePage({
           />
         )}
 
-        {analysis && (
-          <AnalysisResult
-            verdict={analysis.verdict}
-            text={analysis.summary}
-            sources={analysis.sources}
-            trust={analysis.trust}
-            wikipedia={analysis.wikipedia}
-            lang={language}
-          />
+        {/* Always show latest analysis if exists */}
+        {history.length > 0 && (
+          <AnalysisResult result={history[0]} language={language} />
         )}
       </div>
     </div>
@@ -192,6 +192,14 @@ export default function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const trimmedText = text.trim();
+    if (!trimmedText) {
+      alert(
+        language === "he" ? "אנא הזן טקסט חוקי." : "Please enter valid text."
+      );
+      return;
+    }
+
     setLoading(true);
     setAnalysis(null);
 
@@ -199,69 +207,32 @@ export default function App() {
       const res = await fetch("http://127.0.0.1:5000/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text: trimmedText }),
       });
       const data = await res.json();
 
-      let result = null;
-      if (data.status === "success") {
-        result = {
-          verdict: data.verdict || "unknown",
-          summary: data.summary || "",
-          sources: data.sources || [],
-          trust: data.trust ?? null,
-          wikipedia: null,
-        };
-      } else if (data.status === "partial_success") {
-        result = {
-          verdict: data.verdict || "unknown",
-          summary: data.summary || "",
-          sources: data.sources || [],
-          trust: data.trust ?? 60,
-          wikipedia: data.wikipedia || null,
-        };
-      } else if (data.status === "not_found") {
-        result = {
-          verdict: "unknown",
-          summary:
-            language === "he"
-              ? "לא נמצאה טענה דומה."
-              : "No similar claim found in the database.",
-          sources: [],
-          trust: null,
-          wikipedia: null,
-        };
-      } else {
-        result = {
-          verdict: "error",
-          summary:
-            language === "he"
-              ? "שגיאה: לא נתקב ניתוח תקין מהשרת."
-              : "Error: No valid analysis received from the server.",
-          sources: [],
-          trust: null,
-          wikipedia: null,
-        };
-      }
+      const result = {
+        analysis_summary: data.summary || "",
+        certainty_score: data.certainty
+          ? Math.round(data.certainty * 100)
+          : null,
+        identified_issues: data.issues || [],
+        detailed_analysis: [
+          ...(data.misinformation_patterns || []),
+          ...(data.bias_flags || []),
+          ...(data.evidence || []),
+        ],
+        metadata: {
+          model: data.model || "",
+          timestamp: new Date().toISOString(),
+          token_usage: data.token_usage || 0,
+        },
+      };
 
       setAnalysis(result);
-      saveHistory({
-        input_text: text,
-        verdict: result.verdict,
-        summary: result.summary,
-      });
+      saveHistory(result);
     } catch (err) {
       console.error("Error:", err);
-      setAnalysis({
-        verdict: "error",
-        summary:
-          language === "he"
-            ? "שגיאה: לא הצלי7 לנתח את הטקסט."
-            : "Error: Unable to analyze the text.",
-        sources: [],
-        trust: null,
-        wikipedia: null,
-      });
     } finally {
       setLoading(false);
     }
