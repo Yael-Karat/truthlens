@@ -3,13 +3,13 @@ import requests
 import json
 import time
 import random
+import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 def analyze_with_chatgpt_strict(text, max_retries=3):
-    """Strict JSON-only academic analysis using OpenAI API"""
     if not OPENAI_API_KEY:
         return {"error": "Missing OpenAI API key"}
 
@@ -30,7 +30,7 @@ JSON Schema:
 {{
   "status": "success",
   "verdict": "true/false/suspicious/unknown",
-  "certainty": 0.0,  // Float between 0 and 1
+  "certainty": 0.0,
   "summary": "Concise academic-style explanation of your reasoning.",
   "evidence": ["Optional supporting facts or context if available"],
   "bias_flags": ["Potential indicators of bias or emotional language"],
@@ -56,18 +56,32 @@ JSON Schema:
                 print(f"Retrying ChatGPT (attempt {attempt + 1})... waiting {wait:.1f}s")
                 time.sleep(wait)
 
-            response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=data, timeout=45)
+            response = requests.post(
+                "https://api.openai.com/v1/chat/completions",
+                headers=headers,
+                json=data,
+                timeout=45
+            )
             response.raise_for_status()
             result = response.json()
             content = result['choices'][0]['message']['content'].strip()
 
-            # Extract JSON
+            # Extract JSON from markdown code blocks if present
             if '```json' in content:
                 content = content.split('```json')[1].split('```')[0].strip()
             elif '```' in content:
                 content = content.split('```')[1].split('```')[0].strip()
 
-            return json.loads(content)
+            parsed = json.loads(content)
+
+            # Add technical metadata
+            parsed["metadata"] = {
+                "model": data["model"],
+                "token_usage": result.get("usage", {}).get("total_tokens", -1),
+                "timestamp": datetime.datetime.utcnow().isoformat() + "Z"
+            }
+
+            return parsed
 
         except Exception as e:
             print(f"⚠️ Error (attempt {attempt + 1}): {e}")
@@ -76,7 +90,6 @@ JSON Schema:
 
 
 def analyze_text_with_ai(text):
-    """Main analysis function using OpenAI only"""
     text = (text or "").strip()
     print(f"📩 Analyzing text: \"{text}\"")
 
