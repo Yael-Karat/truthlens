@@ -46,11 +46,11 @@
 
 .history-item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   padding: 10px 12px;
   border-bottom: 1px solid #ddd;
   cursor: default;
-  gap: 10px;
+  gap: 6px;
 }
 
 .history-item:hover {

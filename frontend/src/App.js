@@ -107,7 +107,7 @@ function HomePage({
                 type="button"
                 onClick={() => {
                   if (analysis) {
-                    saveHistory(analysis); // Save before clearing
+                    saveHistory(analysis);
                   }
                   setAnalysis(null);
                   setText("");
@@ -218,6 +218,7 @@ export default function App() {
       const data = await res.json();
 
       const result = {
+        input_text: trimmedText, // <-- הוסף פה את הטקסט המקורי
         analysis_summary: data.summary || "",
         certainty_score: data.certainty
           ? Math.round(data.certainty * 100)

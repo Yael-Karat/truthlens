@@ -27,7 +27,7 @@ export default function HistoryPage({
           </button>
         </header>
 
-        {history.length === 0 ? (
+        {!history || history.length === 0 ? (
           <p className="text-gray-700 dark:text-gray-300">
             אין ניתוחים בהיסטוריה.
           </p>
@@ -39,22 +39,45 @@ export default function HistoryPage({
             >
               🗑️ נקה הכל
             </button>
-            <ul className="history-list">
+            <ul className="history-list space-y-6">
               {history.map((item) => (
-                <li key={item.id} className="history-item">
-                  <div className="history-text">
-                    <strong>טקסט:</strong> {item.input_text.slice(0, 50)}...
-                    <br />
-                    <strong>מסקנה:</strong> {item.verdict}
-                    <br />
-                    <strong>סיכום:</strong> {item.summary}
-                    <br />
-                    <span className="history-timestamp">
-                      ({new Date(item.timestamp).toLocaleString()})
-                    </span>
+                <li
+                  key={item.id}
+                  className="history-item p-4 border rounded-lg bg-white/80 dark:bg-gray-700/80 shadow-sm"
+                >
+                  <div className="mb-2">
+                    <strong>טענה:</strong>
+                    <p className="mt-1">{item.input_text || "לא זמין"}</p>
+                  </div>
+                  <div className="mb-2">
+                    <strong>סיכום הניתוח:</strong>
+                    <p className="mt-1">{item.analysis_summary || "לא זמין"}</p>
+                  </div>
+                  <div className="mb-2">
+                    <strong>ציון ודאות:</strong>
+                    <p className="mt-1">
+                      {item.certainty_score !== null &&
+                      item.certainty_score !== undefined
+                        ? `${item.certainty_score}%`
+                        : "לא זמין"}
+                    </p>
+                  </div>
+                  <div className="mb-2">
+                    <strong>בעיות שזוהו:</strong>
+                    <p className="mt-1">
+                      {item.identified_issues &&
+                      item.identified_issues.length > 0
+                        ? item.identified_issues.join(", ")
+                        : "לא זוהו"}
+                    </p>
+                  </div>
+                  <div className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                    {item.metadata?.timestamp
+                      ? new Date(item.metadata.timestamp).toLocaleString()
+                      : "זמן לא זמין"}
                   </div>
                   <button
-                    className="history-delete-btn"
+                    className="mt-3 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow-sm"
                     onClick={() => deleteHistoryItem(item.id)}
                   >
                     מחק
