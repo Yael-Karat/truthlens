@@ -21,6 +21,7 @@ function HomePage({
   navigateToHistory,
   language,
   toggleLanguage,
+  saveHistory,
 }) {
   const isHebrew = language === "he";
   const trimmedText = text.trim();
@@ -31,6 +32,7 @@ function HomePage({
       dir={isHebrew ? "rtl" : "ltr"}
     >
       <div className="max-w-2xl mx-auto bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl shadow-xl rounded-xl p-6">
+        {/* Header */}
         <header className="flex justify-between items-center mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
             🕵️ TruthLens
@@ -57,12 +59,14 @@ function HomePage({
           </div>
         </header>
 
+        {/* Description */}
         <p className="text-gray-700 dark:text-gray-300 mb-4 text-lg font-medium leading-relaxed">
           {isHebrew
             ? "מערכת לזיהוי טענות שקריות או פייק ניוז בעזרת ניתוח בינה מלאכותית."
             : "AI-powered system to detect false claims and fake news."}
         </p>
 
+        {/* Text Input Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <textarea
             value={text}
@@ -102,8 +106,11 @@ function HomePage({
               <button
                 type="button"
                 onClick={() => {
-                  setText("");
+                  if (analysis) {
+                    saveHistory(analysis); // Save before clearing
+                  }
                   setAnalysis(null);
+                  setText("");
                 }}
                 className="bg-red-100 dark:bg-red-800 border border-red-300 dark:border-red-600 text-red-700 dark:text-red-100 px-3 py-1 rounded-md shadow-sm hover:bg-red-200 dark:hover:bg-red-700 transition"
               >
@@ -124,6 +131,7 @@ function HomePage({
           </div>
         </form>
 
+        {/* Loader */}
         {loading && (
           <motion.div
             className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mt-6"
@@ -132,10 +140,8 @@ function HomePage({
           />
         )}
 
-        {/* Always show latest analysis if exists */}
-        {history.length > 0 && (
-          <AnalysisResult result={history[0]} language={language} />
-        )}
+        {/* Latest Analysis */}
+        {analysis && <AnalysisResult result={analysis} language={language} />}
       </div>
     </div>
   );
@@ -262,6 +268,7 @@ export default function App() {
             navigateToHistory={navigateToHistory}
             language={language}
             toggleLanguage={toggleLanguage}
+            saveHistory={saveHistory}
           />
         }
       />
