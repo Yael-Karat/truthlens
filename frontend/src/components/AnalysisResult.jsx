@@ -1,109 +1,212 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { CheckCircle, AlertTriangle, Info, ShieldAlert } from "lucide-react";
+import { CheckCircle, AlertCircle, Info, CircleHelp } from "lucide-react";
+import { clsx } from "clsx";
 
-const issueIcons = {
-  misinformation: <ShieldAlert className="text-red-500 w-5 h-5 inline" />,
-  bias: <AlertTriangle className="text-yellow-500 w-5 h-5 inline" />,
-  "factual integrity": <Info className="text-blue-500 w-5 h-5 inline" />,
-};
-
-const issueColors = {
-  misinformation: "bg-red-100 text-red-800 border-red-300",
-  bias: "bg-yellow-100 text-yellow-800 border-yellow-300",
-  "factual integrity": "bg-blue-100 text-blue-800 border-blue-300",
-};
-
-const languageContent = {
-  en: {
-    summaryTitle: "Analysis Summary",
-    certaintyLabel: "Certainty Score:",
-    issuesTitle: "Identified Issues",
-    detailsTitle: "Detailed Analysis",
-    technicalTitle: "Technical Details",
-  },
-  he: {
-    summaryTitle: "סיכום ניתוח",
-    certaintyLabel: "מדד ודאות:",
-    issuesTitle: "סוגיות שזוהו",
-    detailsTitle: "ניתוח מפורט",
-    technicalTitle: "פרטים טכניים",
-  },
-};
-
-const ProgressBar = ({ value }) => (
-  <div className="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700">
-    <div
-      className="bg-green-500 h-3 rounded-full transition-all"
-      style={{ width: `${value}%` }}
-    ></div>
-  </div>
-);
-
-const AnalysisResult = ({ result, lang }) => {
+export default function AnalysisResult({ result, language }) {
   if (!result) return null;
 
-  const { summary, certainty, issues, detailed_analysis, technical } = result;
+  console.log("AnalysisResult metadata:", result.metadata);
 
-  const content = languageContent[lang] || languageContent.en;
+  const t = (en, he) => (language === "he" ? he : en);
+
+  const getScoreColor = (score) => {
+    if (score >= 85) return "bg-green-500 text-white";
+    if (score >= 60) return "bg-yellow-400 text-black";
+    if (score >= 40) return "bg-orange-400 text-black";
+    return "bg-red-500 text-white";
+  };
+
+  const issueColors = {
+    misinformation: "bg-red-100 text-red-800",
+    bias: "bg-yellow-100 text-yellow-800",
+    conspiracy: "bg-purple-100 text-purple-800",
+    factual_incompleteness: "bg-blue-100 text-blue-800",
+  };
+
+  const issueIcons = {
+    misinformation: <AlertCircle className="w-5 h-5 text-red-600" />,
+    bias: <Info className="w-5 h-5 text-yellow-600" />,
+    conspiracy: <CircleHelp className="w-5 h-5 text-purple-600" />,
+    factual_incompleteness: <Info className="w-5 h-5 text-blue-600" />,
+  };
+
+  const issueDescriptions = {
+    misinformation: t(
+      "Contains false or misleading information.",
+      "מכיל מידע שגוי או מטעה."
+    ),
+    bias: t(
+      "Presents information with clear bias.",
+      "מציג מידע עם הטיה ברורה."
+    ),
+    conspiracy: t(
+      "Reflects conspiracy theory language or patterns.",
+      "מכיל תכנים המזוהים עם תאוריות קונספירציה."
+    ),
+    factual_incompleteness: t(
+      "Lacks key factual elements.",
+      "חסרים בו רכיבים עובדתיים חשובים."
+    ),
+  };
+
+  // פיצול סוגי הבעיות לקטגוריות
+  const misinformationIssues = result.identified_issues?.filter(
+    (i) => i === "misinformation"
+  );
+  const biasIssues = result.identified_issues?.filter((i) => i === "bias");
+  const conspiracyIssues = result.identified_issues?.filter(
+    (i) => i === "conspiracy"
+  );
+  const factualIssues = result.identified_issues?.filter(
+    (i) => i === "factual_incompleteness"
+  );
 
   return (
     <motion.div
-      className="max-w-3xl mx-auto mt-6 space-y-6 text-sm"
+      className="mt-8 w-full rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-lg space-y-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
     >
-      {/* Summary */}
-      <div className="rounded-2xl border border-gray-300 p-4 shadow-sm bg-white dark:bg-gray-800">
-        <h2 className="text-lg font-semibold mb-2">{content.summaryTitle}</h2>
-        <p className="text-gray-700 dark:text-gray-300">{summary}</p>
-      </div>
-
-      {/* Certainty */}
-      <div className="rounded-2xl border border-gray-300 p-4 shadow-sm bg-white dark:bg-gray-800">
-        <h2 className="text-lg font-semibold mb-2">
-          {content.certaintyLabel} {certainty}%
+      {/* Analysis Summary */}
+      <div>
+        <h2 className="text-xl font-bold mb-2">
+          {t("Analysis Summary", "סיכום הניתוח")}
         </h2>
-        <ProgressBar value={certainty} />
+        <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+          {result.analysis_summary}
+        </p>
       </div>
 
-      {/* Issues */}
-      {issues?.length > 0 && (
-        <div className="rounded-2xl border border-gray-300 p-4 shadow-sm bg-white dark:bg-gray-800">
-          <h2 className="text-lg font-semibold mb-2">{content.issuesTitle}</h2>
-          <div className="flex flex-wrap gap-2">
-            {issues.map((issue, idx) => (
-              <span
+      {/* Certainty Score */}
+      <div>
+        <h2 className="text-xl font-bold mb-2">
+          {t("Certainty Score", "ציון ודאות")}
+        </h2>
+        <div
+          className={clsx(
+            "w-fit px-4 py-2 rounded-full font-semibold",
+            getScoreColor(result.certainty_score)
+          )}
+        >
+          {result.certainty_score}%
+        </div>
+      </div>
+
+      {/* Cognitive Biases Section */}
+      {biasIssues?.length > 0 && (
+        <div>
+          <h2 className="text-xl font-bold mb-2">
+            {t("Cognitive Biases Detected", "הטיות קוגניטיביות שזוהו")}
+          </h2>
+          <ul className="space-y-2">
+            {biasIssues.map((issue, idx) => (
+              <li
                 key={idx}
-                className={`flex items-center gap-1 px-3 py-1 text-xs rounded-full border ${issueColors[issue]}`}
+                className={clsx(
+                  "flex items-center gap-2 px-4 py-2 rounded-lg",
+                  issueColors[issue] || "bg-yellow-200 text-yellow-900"
+                )}
               >
-                {issueIcons[issue]} <span className="capitalize">{issue}</span>
-              </span>
+                {issueIcons[issue] || <Info className="w-5 h-5" />}
+                <span className="capitalize font-medium">
+                  {t(issue.replace(/_/g, " "), issueLabelsHe[issue] || issue)}
+                </span>
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  {issueDescriptions[issue]}
+                </span>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
 
-      {/* Detailed */}
-      <div className="rounded-2xl border border-gray-300 p-4 shadow-sm bg-white dark:bg-gray-800">
-        <h2 className="text-lg font-semibold mb-2">{content.detailsTitle}</h2>
-        <ul className="list-disc list-inside space-y-1 text-gray-800 dark:text-gray-200">
-          {detailed_analysis.map((item, idx) => (
-            <li key={idx}>{item}</li>
-          ))}
-        </ul>
-      </div>
+      {/* Other Identified Issues */}
+      {(misinformationIssues?.length > 0 ||
+        conspiracyIssues?.length > 0 ||
+        factualIssues?.length > 0) && (
+        <div>
+          <h2 className="text-xl font-bold mb-2">
+            {t("Key Problems", "בעיות מרכזיות")}
+          </h2>
+          <ul className="space-y-2">
+            {[
+              ...misinformationIssues,
+              ...conspiracyIssues,
+              ...factualIssues,
+            ].map((issue, idx) => (
+              <li
+                key={idx}
+                className={clsx(
+                  "flex items-center gap-2 px-4 py-2 rounded-lg",
+                  issueColors[issue] || "bg-gray-200 text-gray-800"
+                )}
+              >
+                {issueIcons[issue] || (
+                  <CheckCircle className="w-5 h-5 text-green-600" />
+                )}
+                <span className="capitalize font-medium">
+                  {t(issue.replace(/_/g, " "), issueLabelsHe[issue] || issue)}
+                </span>
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  {issueDescriptions[issue]}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-      {/* Technical */}
-      <div className="rounded-2xl border border-gray-300 p-4 shadow-sm bg-white dark:bg-gray-800">
-        <h2 className="text-lg font-semibold mb-2">{content.technicalTitle}</h2>
-        <pre className="text-xs bg-gray-100 p-2 rounded dark:bg-gray-900 text-gray-800 dark:text-gray-200 overflow-x-auto">
-          {JSON.stringify(technical, null, 2)}
-        </pre>
+      {/* Detailed Analysis */}
+      {result.detailed_analysis?.length > 0 && (
+        <div>
+          <h2 className="text-xl font-bold mb-2">
+            {t("Detailed Analysis", "ניתוח מפורט")}
+          </h2>
+          <ul className="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+            {result.detailed_analysis.map((item, idx) => (
+              <li key={idx} className="whitespace-pre-wrap">
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Technical Info */}
+      <div>
+        <h2 className="text-xl font-bold mb-2">
+          {t("Technical Details", "פרטים טכניים")}
+        </h2>
+        <ul className="text-sm text-gray-500 dark:text-gray-400 space-y-1">
+          <li>
+            <strong>{t("Timestamp", "חותמת זמן")}:</strong>{" "}
+            {result.metadata?.timestamp
+              ? new Date(result.metadata.timestamp).toLocaleString(
+                  language === "he" ? "he-IL" : "en-US"
+                )
+              : "N/A"}
+          </li>
+          <li>
+            <strong>{t("Model Used", "מודל בשימוש")}:</strong>{" "}
+            {result.metadata?.model ?? "N/A"}
+          </li>
+          <li>
+            <strong>{t("Token Usage", "שימוש בטוקנים")}:</strong>{" "}
+            {typeof result.metadata?.token_usage === "number" &&
+            result.metadata.token_usage >= 0
+              ? result.metadata.token_usage
+              : "N/A"}
+          </li>
+        </ul>
       </div>
     </motion.div>
   );
-};
+}
 
-export default AnalysisResult;
+const issueLabelsHe = {
+  misinformation: "מידע שגוי",
+  bias: "הטיה",
+  conspiracy: "תיאוריית קונספירציה",
+  factual_incompleteness: "חוסר עובדתיות",
+};
