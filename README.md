@@ -1,5 +1,7 @@
 # TruthLens: AI-Powered Misinformation Detection Tool
 
+![TruthLens Logo](frontend\public\images\favicon.ico)
+
 ## 📋 Table of Contents
 
 - [Overview](#overview)
@@ -253,9 +255,12 @@ TRUTHLENS/
 │   ├── node_modules/         # NPM dependencies
 │   ├── public/
 │   │   ├── images/
-│   │   │   └── background-gradient... # Background images
+│   │   │   └── favicon.ico   # Icon image
 │   │   └── index.html        # Main HTML template
 │   ├── src/
+│   │   ├── assets/
+│   │   │   ├── images/
+│   │   │   │    └── background-gradient.png   # Background images
 │   │   ├── components/
 │   │   │   ├── AnalysisResult.jsx    # Results display component
 │   │   │   └── HistoryPage.jsx       # History page component
