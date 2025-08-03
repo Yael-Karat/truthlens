@@ -3,9 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "ajv": "^8.12.0",
+    "ajv-keywords": "^5.1.0",
+    "axios": "^1.11.0",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.23.6",
+    "i18next": "^25.3.2",
+    "lucide-react": "^0.535.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^15.6.1",
     "react-router-dom": "^7.7.1",
     "react-scripts": "5.0.1"
   },
