@@ -11,10 +11,7 @@ CORS(app)
 
 HISTORY_FILE = "history.json"
 
-# -------- פונקציות עזר להיסטוריה --------
-
 def load_history():
-    """טוען היסטוריה מהקובץ (אם קיים), אחרת מחזיר רשימה ריקה"""
     if not os.path.exists(HISTORY_FILE):
         return []
     try:
@@ -24,12 +21,10 @@ def load_history():
         return []
 
 def save_history(history_list):
-    """שומר רשימת היסטוריה לקובץ"""
     with open(HISTORY_FILE, "w", encoding="utf-8") as f:
         json.dump(history_list, f, ensure_ascii=False, indent=2)
 
 def add_to_history(input_text, result):
-    """יוצר רשומה ושומר אותה להיסטוריה"""
     history = load_history()
     new_entry = {
         "id": str(uuid.uuid4()),
@@ -37,12 +32,11 @@ def add_to_history(input_text, result):
         "input_text": input_text,
         "result": result
     }
-    history.insert(0, new_entry)  # מוסיף לראש הרשימה (האחרון ראשון)
+    history.insert(0, new_entry)
     save_history(history)
     return new_entry
 
 def delete_history_item(item_id):
-    """מוחק פריט לפי ID"""
     history = load_history()
     new_history = [h for h in history if h["id"] != item_id]
     if len(new_history) != len(history):
@@ -51,11 +45,8 @@ def delete_history_item(item_id):
     return False
 
 def clear_history():
-    """מנקה את כל ההיסטוריה"""
     save_history([])
     return True
-
-# -------- API עיקרי --------
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
@@ -75,7 +66,6 @@ def analyze():
             "chatgpt_analysis": None
         }), 400
 
-   # Inside def analyze():
     result = analyze_text_with_ai(text)
     print("תוצאה מה-AI:", result)
 
@@ -90,12 +80,11 @@ def analyze():
         "misinformation_patterns": result.get("misinformation_patterns", []),
         "claim_type": result.get("claim_type", "unknown"),
         "evidence": result.get("evidence", []),
+        "metadata": result.get("metadata", {}),
         "history_id": saved_entry["id"]
     }
 
     return jsonify(response)
-
-# -------- API היסטוריה --------
 
 @app.route("/history", methods=["GET"])
 def get_history():
@@ -114,7 +103,6 @@ def clear_all_history():
 
 @app.route("/health", methods=["GET"])
 def health_check():
-    """בדיקת תקינות המערכת"""
     return jsonify({
         "status": "healthy",
         "message": "TruthLens API is running",
@@ -123,5 +111,3 @@ def health_check():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-    
