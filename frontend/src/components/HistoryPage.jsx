@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/History.css";
 
@@ -8,6 +8,18 @@ export default function HistoryPage({
   clearHistory,
 }) {
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [modalAction, setModalAction] = useState(null); // 'clear' or item id
+
+  const handleDelete = () => {
+    if (modalAction === "clear") {
+      clearHistory();
+    } else if (typeof modalAction === "number") {
+      deleteHistoryItem(modalAction);
+    }
+    setShowModal(false);
+    setModalAction(null);
+  };
 
   return (
     <div
@@ -34,11 +46,15 @@ export default function HistoryPage({
         ) : (
           <>
             <button
-              onClick={clearHistory}
+              onClick={() => {
+                setShowModal(true);
+                setModalAction("clear");
+              }}
               className="mb-4 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow"
             >
               🗑️ נקה הכל
             </button>
+
             <ul className="history-list space-y-6">
               {history.map((item) => (
                 <li
@@ -78,7 +94,10 @@ export default function HistoryPage({
                   </div>
                   <button
                     className="mt-3 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow-sm"
-                    onClick={() => deleteHistoryItem(item.id)}
+                    onClick={() => {
+                      setShowModal(true);
+                      setModalAction(item.id);
+                    }}
                   >
                     מחק
                   </button>
@@ -88,6 +107,33 @@ export default function HistoryPage({
           </>
         )}
       </div>
+
+      {/* Confirmation Modal */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+            <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">
+              {modalAction === "clear"
+                ? "האם אתה בטוח שברצונך למחוק את כל ההיסטוריה?"
+                : "האם אתה בטוח שברצונך למחוק טענה זו?"}
+            </h2>
+            <div className="flex justify-center gap-4 mt-4">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-gray-500 transition"
+              >
+                ביטול
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition"
+              >
+                אישור
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
