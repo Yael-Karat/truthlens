@@ -218,21 +218,33 @@ export default function App() {
       const data = await res.json();
 
       const result = {
-        input_text: trimmedText, // <-- הוסף פה את הטקסט המקורי
+        input_text: trimmedText,
         analysis_summary: data.summary || "",
         certainty_score: data.certainty
           ? Math.round(data.certainty * 100)
           : null,
-        identified_issues: data.issues || [],
+        identified_issues:
+          data.bias_flags?.length > 0 ||
+          data.misinformation_patterns?.length > 0
+            ? [
+                ...(data.bias_flags?.length > 0 ? ["bias"] : []),
+                ...(data.misinformation_patterns?.length > 0
+                  ? ["misinformation"]
+                  : []),
+              ]
+            : [],
         detailed_analysis: [
           ...(data.misinformation_patterns || []),
           ...(data.bias_flags || []),
           ...(data.evidence || []),
         ],
         metadata: {
-          model: data.model || "",
-          timestamp: new Date().toISOString(),
-          token_usage: data.token_usage || 0,
+          model: data.metadata?.model || data.model || "",
+          timestamp: data.metadata?.timestamp || new Date().toISOString(),
+          token_usage:
+            typeof data.metadata?.token_usage === "number"
+              ? data.metadata.token_usage
+              : data.token_usage || 0,
         },
       };
 
