@@ -21,3 +21,6 @@ dist/
 
 # VSCode
 .vscode/
+
+# Backend history file (ignore local history storage)
+backend/history.json
