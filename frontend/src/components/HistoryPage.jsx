@@ -6,16 +6,13 @@ export default function HistoryPage({
   history,
   deleteHistoryItem,
   clearHistory,
+  language,
 }) {
   const navigate = useNavigate();
-  const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [modalAction, setModalAction] = useState(null);
 
-  // Detect current language based on pathname or query param (fallback to Hebrew)
-  const isHebrew =
-    location?.pathname?.includes("/he") ||
-    document.documentElement.dir === "rtl";
+  const isHebrew = language === "he";
 
   const handleDelete = () => {
     if (modalAction === "clear") {

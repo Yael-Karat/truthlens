@@ -299,6 +299,7 @@ export default function App() {
             history={history}
             clearHistory={clearHistory}
             deleteHistoryItem={deleteHistoryItem}
+            language={language}
           />
         }
       />
