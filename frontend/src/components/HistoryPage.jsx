@@ -11,6 +11,7 @@ export default function HistoryPage({
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [modalAction, setModalAction] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
 
   const isHebrew = language === "he";
 
@@ -22,6 +23,13 @@ export default function HistoryPage({
     }
     setShowModal(false);
     setModalAction(null);
+  };
+
+  const handleCopy = (text, id) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1500);
+    });
   };
 
   return (
@@ -109,15 +117,31 @@ export default function HistoryPage({
                       ? "זמן לא זמין"
                       : "Time unavailable"}
                   </div>
-                  <button
-                    className="mt-3 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow-sm"
-                    onClick={() => {
-                      setShowModal(true);
-                      setModalAction(item.id);
-                    }}
-                  >
-                    {isHebrew ? "מחק" : "Delete"}
-                  </button>
+
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    <button
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow-sm"
+                      onClick={() => {
+                        setShowModal(true);
+                        setModalAction(item.id);
+                      }}
+                    >
+                      {isHebrew ? "מחק" : "Delete"}
+                    </button>
+
+                    <button
+                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow-sm"
+                      onClick={() => handleCopy(item.input_text || "", item.id)}
+                    >
+                      {copiedId === item.id
+                        ? isHebrew
+                          ? "הועתק!"
+                          : "Copied!"
+                        : isHebrew
+                        ? "העתק טענה"
+                        : "Copy Claim"}
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
