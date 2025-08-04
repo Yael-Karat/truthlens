@@ -142,6 +142,13 @@ function HomePage({
 
         {/* Latest Analysis */}
         {analysis && <AnalysisResult result={analysis} language={language} />}
+
+        {/* Disclaimer */}
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-6 text-center">
+          {isHebrew
+            ? "⚠️ ניתוח זה מתבצע באמצעות בינה מלאכותית ועשוי להכיל שגיאות. מומלץ לאמת מידע חשוב באופן עצמאי."
+            : "⚠️ This analysis is generated using AI and may contain errors. Important information should be independently verified."}
+        </p>
       </div>
     </div>
   );
