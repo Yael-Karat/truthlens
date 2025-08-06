@@ -135,14 +135,10 @@ Create a `.env` file in the backend directory:
 ```env
 # AI API Keys
 OPENAI_API_KEY=your_openai_api_key_here
-PERPLEXITY_API_KEY=your_perplexity_api_key_here
 
 # Flask Configuration
 FLASK_ENV=development
 FLASK_DEBUG=True
-
-# Additional API keys if used
-GOOGLE_FACT_CHECK_API_KEY=your_google_api_key_here
 ```
 
 ### Start the Application
@@ -244,19 +240,27 @@ def analyze_content(text_content):
 
 ```
 TRUTHLENS/
+├── .vscode/                   # VS Code settings
 ├── backend/
 │   ├── __pycache__/           # Python cache files
 │   ├── .env                   # Environment variables (API keys, config)
-│   ├── ai_integration.py      # AI services integration (OpenAI, Perplexity)
-│   ├── app.py                # Main Flask application server
-│   ├── history.json          # Analysis history storage
-│   └── requirements.txt      # Python dependencies
+│   ├── ai_integration.py      # AI services integration (OpenAI)
+│   ├── app.py                 # Main Flask application server
+│   ├── history.json           # Analysis history storage
+│   └── requirements.txt       # Python dependencies
 ├── frontend/
-│   ├── node_modules/         # NPM dependencies
+│   ├── node_modules/          # NPM dependencies
 │   ├── public/
 │   │   ├── images/
-│   │   │   └── favicon.ico   # Icon image
-│   │   └── index.html        # Main HTML template
+│   │   │   ├── favicon.ico               # Website favicon/icon
+│   │   │   ├── ClaimAnalysis.png         # Screenshot of claim analysis feature
+│   │   │   ├── CognitiveBiasesExample.png # Example of cognitive bias detection
+│   │   │   ├── DarkModeEnglish.png       # Dark mode interface in English
+│   │   │   ├── DarkModeHebrew.png        # Dark mode interface in Hebrew
+│   │   │   ├── EnglishClaimAnalysis.png  # English version of claim analysis
+│   │   │   ├── HistoryPage.png           # History page interface screenshot
+│   │   │   └── HomePage.png              # Main homepage interface
+│   │   └── index.html                    # Main HTML template
 │   ├── src/
 │   │   ├── assets/
 │   │   │   ├── images/
@@ -266,18 +270,17 @@ TRUTHLENS/
 │   │   │   └── HistoryPage.jsx       # History page component
 │   │   ├── styles/
 │   │   │   ├── AnalysisResult.css    # Results styling
-│   │   │   ├── App.css              # Main app styling
-│   │   │   ├── History.css          # History page styling
-│   │   │   └── index.css            # Global styles
-│   │   ├── App.js               # Main React application
-│   │   └── index.js             # React entry point
-│   ├── .gitignore              # Git ignore rules
-│   ├── package-lock.json       # NPM lock file
+│   │   │   ├── App.css               # Main app styling
+│   │   │   ├── History.css           # History page styling
+│   │   │   └── index.css             # Global styles
+│   │   ├── App.js             # Main React application
+│   │   └── index.js           # React entry point
+│   ├── package-lock.json      # NPM lock file
 │   ├── package.json           # NPM dependencies and scripts
 │   ├── postcss.config.js      # PostCSS configuration
 │   ├── README.md              # Frontend-specific documentation
-│   ├── tailwind.config.js     # Tailwind CSS configuration
-│   └── venv/                  # Python virtual environment
+│   └── tailwind.config.js     # Tailwind CSS configuration
+├── venv/                      # Python virtual environment (misplaced)
 ├── .gitignore                 # Root git ignore
 └── README.md                  # Main project documentation
 ```
@@ -290,9 +293,13 @@ TRUTHLENS/
 
 ### Screenshots
 
-![Main Interface](./frontend/public/images/main-interface.png)
-![Analysis Results](./frontend/public/images/analysis-results.png)
-![History Page](./frontend/public/images/history-page.png)
+![Main Interface](./frontend/public/images/HomePage.png)
+![Analysis Results](./frontend/public/images/ClaimAnalysis.png)
+![English Analysis Results](./frontend/public/images/EnglishClaimAnalysis.png)
+![History Page](./frontend/public/images/HistoryPage.png)
+![Cognitive Biases Example](./frontend/public/images/CognitiveBiasesExample.png)
+![Dark Mode RTL Support](./frontend/public/images/DarkModeHebrew.png)
+![Dark Mode RTL Support](./frontend/public/images/DarkModeEnglish.png)
 
 ## ⚖️ Ethical Considerations
 
