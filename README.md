@@ -1,6 +1,6 @@
 # TruthLens: AI-Powered Misinformation Detection Tool
 
-![TruthLens Logo](frontend\public\images\favicon.ico)
+![TruthLens Logo](./frontend/public/images/favicon.ico)
 
 ## 📋 Table of Contents
 
