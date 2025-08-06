@@ -69,7 +69,6 @@ This tool helps users evaluate the truthfulness of tweets, posts, headlines, and
 
 ### AI & APIs
 
-- **Google Fact Check API** - Cross-referencing claims
 - **OpenAI GPT** - Natural language processing and analysis
 
 ### Development Tools
