@@ -135,25 +135,23 @@ Create a `.env` file in the backend directory:
 ```env
 # AI API Keys
 OPENAI_API_KEY=your_openai_api_key_here
-
-# Flask Configuration
-FLASK_ENV=development
-FLASK_DEBUG=True
 ```
 
 ### Start the Application
 
 ```bash
 # Start backend server (from backend directory)
+venv\Scripts\activate
 cd backend
 python app.py
 
 # Start frontend (in another terminal, from frontend directory)
+venv\Scripts\activate
 cd frontend
-npm start
+npm run start
 ```
 
-The backend will run on `http://localhost:5000` (typical Flask default)
+The backend will run on `http://127.0.0.1:5000`
 The frontend will be available at `http://localhost:3000`
 
 ## 💡 Usage
