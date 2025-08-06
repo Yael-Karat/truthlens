@@ -100,7 +100,6 @@ JSON Schema:
 
 def analyze_text_with_ai(text):
     text = (text or "").strip()
-    print(f"📩 Analyzing text: \"{text}\"")
 
     analysis = analyze_with_chatgpt_strict(text)
     if "error" in analysis:
@@ -121,7 +120,6 @@ def analyze_text_with_ai(text):
 
     certainty = analysis.get("certainty")
     if not isinstance(certainty, (int, float)) or certainty < 0 or certainty > 1:
-        print(f"⚠️ Invalid certainty value: {certainty}. Setting to None")
         analysis["certainty"] = None
         analysis["certainty_score"] = None
     else:

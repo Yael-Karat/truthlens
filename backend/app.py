@@ -53,8 +53,6 @@ def analyze():
     data = request.get_json()
     text = (data.get("text") or "").strip()
 
-    print(f"טקסט שהתקבל לניתוח (אחרי strip): '{text}'")
-
     if not text:
         return jsonify({
             "status": "error",
@@ -67,7 +65,6 @@ def analyze():
         }), 400
 
     result = analyze_text_with_ai(text)
-    print("תוצאה מה-AI:", result)
 
     saved_entry = add_to_history(text, result)
 
