@@ -51,7 +51,7 @@ JSON Schema:
             {"role": "user", "content": prompt}
         ],
         "temperature": 0.2,
-        "max_tokens": 700
+        "max_tokens": 1000
     }
 
     for attempt in range(max_retries):
