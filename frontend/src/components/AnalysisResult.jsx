@@ -239,52 +239,52 @@ const issueLabelsHe = {
 };
 
 const cognitiveBiasesDefinitions = {
-  "Fundamental Attribution Error":
-    "Tendency to explain the behavior of others according to their personality, but our behavior according to external circumstances.",
-  "Placebo Effect":
-    "Belief that a treatment helps even when it lacks a real medical effect - just because we think it works.",
-  "Reactance":
-    "Automatic resistance to what feels like coercion or an attempt to control us.",
-  "Optimism Bias":
-    "Overestimation of the chance of a positive outcome - tendency to be overly optimistic.",
-  "Groupthink":
-    "Tendency of groups to make bad decisions in order to maintain harmony and avoid conflicts.",
-  "Belief Bias":
-    "Judging arguments by their fit with our existing beliefs - not by their logical validity.",
-  "Availability Heuristic":
-    "Estimating probabilities by what comes easily to mind - usually dramatic or current things.",
-  "Spotlight Effect":
-    "Over-feeling that we are noticed - a tendency to think that others notice us much more than they actually are.",
-  "Pessimism Bias":
-    "Overestimating the chance of a negative outcome - a tendency to be overly pessimistic.",
-  "Negativity Bias":
-    "A stronger influence of negative experiences than positive ones on thinking and emotions.",
-  "Self-Serving Bias":
-    "Attributing successes to ourselves and failures to external circumstances.",
-  "Curse of Knowledge":
-    "Difficulty understanding what it is like not to know something, after we have already learned it - makes it difficult to explain it to others.",
-  "Just World Hypothesis":
-    "Belief that the world is fair and that people get what they deserve - even when it is not true.",
-  "Declinism":
-    "Tendency to see the past as preferable to the present, and to think that the future will be worse.",
-  "Backfire Effect":
-    "When presented with facts that contradict our beliefs, we may dig deeper into them.",
-  "Confirmation Bias":
-    "Searching for, interpreting, and remembering information that is consistent with our existing beliefs - and ignoring contradictory information.",
-  "Anchoring":
-    "The tendency to rely on initial (anchor) information in decision-making, even if it is irrelevant.",
-  "Barnum Effect":
-    "A tendency to see general descriptions as applying to us personally - as in horoscopes.",
-  "Dunning-Kruger Effect":
-    "People with little knowledge overestimate themselves, and experts underestimate themselves.",
-  "Sunk Cost Fallacy":
-    "Continuing to invest in something just because we have already invested in it - even if it is no longer worthwhile.",
-  "Framing Effect":
-    "Decision-making is influenced by the way information is presented to us - not just by its content.",
-  "In-Group Bias":
-    "Preference for people who belong to our group over those who do not - even if this is not justified.",
-  "Halo Effect":
-    "A general judgment of a person based on one prominent trait (e.g. beauty) that influences the assessment of their other traits.",
-  "Bystander Effect":
-    "A tendency not to act in emergency situations when there are many people - thinking that someone else will take care of it.",
+"Fundamental Attribution Error":
+"Tendency to explain the behavior of others according to their personality, but our behavior according to external circumstances.",
+"Placebo Effect":
+"Belief that a treatment helps even when it lacks a real medical effect - just because we think it works.",
+"Reactance":
+"Automatic resistance to what feels like coercion or an attempt to control us.",
+"Optimism Bias":
+"Overestimation of the chance of a positive outcome - tendency to be overly optimistic.",
+"Groupthink":
+"Tendency of groups to make bad decisions in order to maintain harmony and avoid conflicts.",
+"Belief Bias":
+"Judging arguments by their fit with our existing beliefs - not by their logical validity.",
+"Availability Heuristic":
+"Estimating probabilities by what comes easily to mind - usually dramatic or current things.",
+"Spotlight Effect":
+"Over-feeling that we are noticed - a tendency to think that others notice us much more than they actually are.",
+"Pessimism Bias":
+"Overestimating the chance of a negative outcome - a tendency to be overly pessimistic.",
+"Negativity Bias":
+"A stronger influence of negative experiences than positive ones on thinking and emotions.",
+"Self-Serving Bias":
+"Attributing successes to ourselves and failures to external circumstances.",
+"Curse of Knowledge":
+"Difficulty understanding what it is like not to know something, after we have already learned it - makes it difficult to explain it to others.",
+"Just World Hypothesis":
+"Belief that the world is fair and that people get what they deserve - even when it is not true.",
+"Declinism":
+"Tendency to see the past as preferable to the present, and to think that the future will be worse.",
+"Backfire Effect":
+"When presented with facts that contradict our beliefs, we may dig deeper into them.",
+"Confirmation Bias":
+"Searching for, interpreting, and remembering information that is consistent with our existing beliefs - and ignoring contradictory information.",
+"Anchoring":
+"The tendency to rely on initial (anchor) information in decision-making, even if it is irrelevant.",
+"Barnum Effect":
+"A tendency to see general descriptions as applying to us personally - as in horoscopes.",
+"Dunning-Kruger Effect":
+"People with little knowledge overestimate themselves, and experts underestimate themselves.",
+"Sunk Cost Fallacy":
+"Continuing to invest in something just because we have already invested in it - even if it is no longer worthwhile.",
+"Framing Effect":
+"Decision-making is influenced by the way information is presented to us - not just by its content.",
+"In-Group Bias":
+"Preference for people who belong to our group over those who do not - even if this is not justified.",
+"Halo Effect":
+"A general judgment of a person based on one prominent trait (e.g. beauty) that influences the assessment of their other traits.",
+"Bystander Effect":
+"A tendency not to act in emergency situations when there are many people - thinking that someone else will take care of it.",
 };
