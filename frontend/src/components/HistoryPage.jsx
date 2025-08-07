@@ -82,7 +82,9 @@ export default function HistoryPage({
                     <strong>
                       {isHebrew ? "סיכום הניתוח:" : "Analysis Summary:"}
                     </strong>
-                    <p className="mt-1">{item.analysis_summary || "לא זמין"}</p>
+                    <p className="mt-1">
+                      {item.analysis_summary || (isHebrew ? "לא ידוע" : "Unknown")}
+                    </p>
                   </div>
                   <div className="mb-2">
                     <strong>
@@ -93,8 +95,8 @@ export default function HistoryPage({
                       item.certainty_score !== undefined
                         ? `${item.certainty_score}%`
                         : isHebrew
-                        ? "לא זמין"
-                        : "Unavailable"}
+                        ? "לא ידוע"
+                        : "Unknown"}
                     </p>
                   </div>
                   <div className="mb-2">
@@ -114,7 +116,7 @@ export default function HistoryPage({
                     {item.metadata?.timestamp
                       ? new Date(item.metadata.timestamp).toLocaleString()
                       : isHebrew
-                      ? "זמן לא זמין"
+                      ? "זמן לא ידוע"
                       : "Time unavailable"}
                   </div>
 
