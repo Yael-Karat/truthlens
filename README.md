@@ -338,7 +338,7 @@ truthlens/
 ├── .gitignore              # Git ignore rules
 └── README.md               # Main project documentation (this file)
 ```
-## 📄 Reflective report
+## 📄 Reflective Report
 
 [Click here to open the Reflective Report file (PDF)](./final_project_yael_karat.pdf)
 
