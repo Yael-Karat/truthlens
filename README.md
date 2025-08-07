@@ -338,6 +338,9 @@ truthlens/
 ├── .gitignore              # Git ignore rules
 └── README.md               # Main project documentation (this file)
 ```
+## 📄 Reflective report
+
+[Click here to download the Reflective Report (DOCX)](./final_project_yael_karat.docx)
 
 ## 🎬 Demo
 
