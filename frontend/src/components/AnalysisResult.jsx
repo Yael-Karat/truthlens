@@ -63,6 +63,8 @@ export default function AnalysisResult({ result, language }) {
   // קבלת רשימת הטיות קוגניטיביות
   const cognitiveBiases = result.cognitive_biases || [];
 
+  const unknownValue = () => (language === "he" ? "לא ידוע" : "Unknown");
+
   return (
     <motion.div
       className="mt-8 w-full rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-lg space-y-6"
@@ -75,7 +77,7 @@ export default function AnalysisResult({ result, language }) {
           {t("Analysis Summary", "סיכום הניתוח")}
         </h2>
         <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-          {result.analysis_summary || result.summary || "N/A"}
+          {result.analysis_summary || result.summary || unknownValue()}
         </p>
       </div>
 
@@ -92,7 +94,7 @@ export default function AnalysisResult({ result, language }) {
         >
           {typeof result.certainty_score === "number"
             ? `${result.certainty_score}%`
-            : "N/A"}
+          : unknownValue()}
         </div>
       </div>
 
@@ -210,18 +212,18 @@ export default function AnalysisResult({ result, language }) {
               ? new Date(result.metadata.timestamp).toLocaleString(
                   language === "he" ? "he-IL" : "en-US"
                 )
-              : "N/A"}
+              : unknownValue()}
           </li>
           <li>
             <strong>{t("Model Used", "מודל בשימוש")}:</strong>{" "}
-            {result.metadata?.model ?? "N/A"}
+            {result.metadata?.model || unknownValue()}
           </li>
           <li>
             <strong>{t("Token Usage", "שימוש בטוקנים")}:</strong>{" "}
             {typeof result.metadata?.token_usage === "number" &&
             result.metadata.token_usage >= 0
               ? result.metadata.token_usage
-              : "N/A"}
+              : unknownValue()}
           </li>
         </ul>
       </div>
@@ -241,11 +243,11 @@ const cognitiveBiasesDefinitions = {
     "Tendency to explain the behavior of others according to their personality, but our behavior according to external circumstances.",
   "Placebo Effect":
     "Belief that a treatment helps even when it lacks a real medical effect - just because we think it works.",
-  Reactance:
+  "Reactance":
     "Automatic resistance to what feels like coercion or an attempt to control us.",
   "Optimism Bias":
     "Overestimation of the chance of a positive outcome - tendency to be overly optimistic.",
-  Groupthink:
+  "Groupthink":
     "Tendency of groups to make bad decisions in order to maintain harmony and avoid conflicts.",
   "Belief Bias":
     "Judging arguments by their fit with our existing beliefs - not by their logical validity.",
@@ -263,13 +265,13 @@ const cognitiveBiasesDefinitions = {
     "Difficulty understanding what it is like not to know something, after we have already learned it - makes it difficult to explain it to others.",
   "Just World Hypothesis":
     "Belief that the world is fair and that people get what they deserve - even when it is not true.",
-  Declinism:
+  "Declinism":
     "Tendency to see the past as preferable to the present, and to think that the future will be worse.",
   "Backfire Effect":
     "When presented with facts that contradict our beliefs, we may dig deeper into them.",
   "Confirmation Bias":
     "Searching for, interpreting, and remembering information that is consistent with our existing beliefs - and ignoring contradictory information.",
-  Anchoring:
+  "Anchoring":
     "The tendency to rely on initial (anchor) information in decision-making, even if it is irrelevant.",
   "Barnum Effect":
     "A tendency to see general descriptions as applying to us personally - as in horoscopes.",
