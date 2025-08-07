@@ -106,7 +106,6 @@ function HomePage({
               <button
                 type="button"
                 onClick={() => {
-                  
                   setAnalysis(null);
                   setText("");
                 }}
