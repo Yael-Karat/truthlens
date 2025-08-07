@@ -340,7 +340,7 @@ truthlens/
 ```
 ## 📄 Reflective report
 
-[Click here to download the Reflective Report (DOCX)](./final_project_yael_karat.docx)
+[Click here to open the Reflective Report file (PDF)](./final_project_yael_karat.pdf)
 
 ## 🎬 Demo
 
