@@ -135,6 +135,24 @@ pip install -r requirements.txt --extra-index-url https://download.pytorch.org/w
 cd frontend
 
 # Install npm dependencies
+npm install --legacy-peer-deps
+
+# If you encounter issues with react-scripts showing version 0.0.0, run:
+npm uninstall react-scripts
+npm install react-scripts@5.0.1 --legacy-peer-deps
+
+# Verify installation:
+npm list react-scripts
+# Expected output:
+# └── react-scripts@5.0.1
+
+# If errors persist, reset the installation:
+Remove-Item -Recurse -Force node_modules
+Remove-Item -Force package-lock.json
+npm install --legacy-peer-deps
+
+
+# Install npm dependencies
 npm install
 ```
 
