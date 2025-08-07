@@ -342,8 +342,7 @@ truthlens/
 ## 🎬 Demo
 
 ### Video Demonstration
-
-[Link to demo video] <!-- הוסף קישור לסרטון הדגמה -->
+[Link to demo video](https://www.youtube.com/watch?v=Ge3px08-VPA)
 
 ### Application Screenshots
 
