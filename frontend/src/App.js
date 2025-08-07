@@ -106,9 +106,7 @@ function HomePage({
               <button
                 type="button"
                 onClick={() => {
-                  if (analysis) {
-                    saveHistory(analysis);
-                  }
+                  
                   setAnalysis(null);
                   setText("");
                 }}
