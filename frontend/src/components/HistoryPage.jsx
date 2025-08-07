@@ -117,7 +117,7 @@ export default function HistoryPage({
                       ? new Date(item.metadata.timestamp).toLocaleString()
                       : isHebrew
                       ? "זמן לא ידוע"
-                      : "Time unavailable"}
+                      : "Time Unknown"}
                   </div>
 
                   <div className="flex flex-wrap gap-2 mt-3">
